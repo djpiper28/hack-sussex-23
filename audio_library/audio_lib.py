@@ -9,7 +9,7 @@ JORDAN_PETERSON = "B4emaEpL5FcK3fc2AX1f"
 DANNY = "IlLo2Vy8UKY0YQ4muyjI"
 
 
-class AudioImporterSettings:
+class AudioSettings:
     def __init__(
         self, username: str, password: str, db: str, host: str, port: str, el_key: str
     ):
@@ -32,7 +32,7 @@ class AudioImporterSettings:
         return conn
 
 
-def get_audio_settings() -> AudioImporterSettings:
+def get_audio_settings() -> AudioSettings:
     return AudioImporterSettings(
         os.getenv("DB_USER"),
         os.getenv("DB_PASS"),
@@ -44,7 +44,7 @@ def get_audio_settings() -> AudioImporterSettings:
 
 
 class AudioImporter:
-    def __init__(self, settings: AudioImporterSettings):
+    def __init__(self, settings: AudioSettings):
         self.settings = settings
 
     def __get_id(self) -> int:
