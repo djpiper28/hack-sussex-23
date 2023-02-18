@@ -18,3 +18,5 @@ create table news_scraped(
     title text primary key,
     time integer not null
 );
+
+create sequence serial_num;
