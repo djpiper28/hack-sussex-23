@@ -1,8 +1,41 @@
 import psycopg2
 import os
-import eleven_labs
 import subprocess
 import dotenv
+import requests
+import subprocess
+
+TMP_FILE = f"tmp-{os.getpid()}.mp3"
+
+"""
+This method will contact the eleven labs api and, use their speech synthesis to generate
+an mp3 file from the given input, this can then be saved in the database
+"""
+
+
+def eleven_labs_tts(text: str, api_key: str, voice_id: str) -> bytes:
+    url: str = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/stream"
+    settings = dict()
+    settings["text"] = text
+
+    voice_settings = dict()
+    voice_settings["stability"] = 0
+    voice_settings["similarity_boost"] = 0
+    settings["voice_settings"] = voice_settings
+
+    headers = {
+        "xi-api-key": api_key,
+        "accept": "*/*",
+        "Content-Type": "application/json",
+    }
+
+    r = requests.post(url, json=settings, headers=headers)
+    if r.status_code != 200:
+        raise RuntimeError(r.text)
+
+    print(f"Generated '{text}' using {voice_id}")
+    return r.content
+
 
 PIERS_MORGAN = "3Ht7G75cBW4JaQld9TQI"
 JORDAN_PETERSON = "B4emaEpL5FcK3fc2AX1f"
@@ -33,7 +66,7 @@ class AudioSettings:
 
 
 def get_audio_settings() -> AudioSettings:
-    return AudioImporterSettings(
+    return AudioSettings(
         os.getenv("DB_USER"),
         os.getenv("DB_PASS"),
         os.getenv("DB_NAME"),
@@ -57,7 +90,7 @@ class AudioImporter:
         return ret
 
     def tts(self, text: str, voice_id: str) -> bytes:
-        return eleven_labs.eleven_labs_tts(text, self.settings.el_key, voice_id)
+        return eleven_labs_tts(text, self.settings.el_key, voice_id)
 
     def add_program(self, name: str, audio: bytes) -> int:
         id = self.__get_id()

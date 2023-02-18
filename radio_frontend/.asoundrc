@@ -1,0 +1,10 @@
+pcm.pulse_monitor {
+  type pulse
+  device alsa_output.usb-SYC_SA9123_USB_Audio-01.analog-stereo.monitor
+}
+
+ctl.pulse_monitor {
+  type pulse
+  device alsa_output.usb-SYC_SA9123_USB_Audio-01.analog-stereo.monitor
+}
+
