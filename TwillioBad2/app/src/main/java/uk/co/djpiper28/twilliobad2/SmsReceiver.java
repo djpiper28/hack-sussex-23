@@ -40,11 +40,11 @@ public class SmsReceiver extends BroadcastReceiver {
                         Jsoup.connect("http://192.168.137.170:6969").requestBody(message).post();
                         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
-                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
                     }
                 };
                 Thread t = new Thread(r);
-                r.run();
+                t.start();
             }
         }
     }
