@@ -23,6 +23,11 @@ create table queue (
 );
 """
 
+PIERS_MORGAN = "3Ht7G75cBW4JaQld9TQI"
+JORDAN_PETERSON = "B4emaEpL5FcK3fc2AX1f"
+JOE_ROGAN = "VAS4XWXYTmSKls7OGoSm"
+DA_QUEEN = "iLozDr3z01WMOR7iuxha"
+
 
 class AudioImporterSettings:
     def __init__(
