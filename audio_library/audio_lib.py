@@ -1,5 +1,7 @@
 import psycopg2
 import os
+import eleven_labs
+import subprocess
 
 DATABASE_SQL = """
 create table program (
@@ -23,12 +25,15 @@ create table queue (
 
 
 class AudioImporterSettings:
-    def __init__(self, username: str, password: str, db: str, host: str, port: str):
+    def __init__(
+        self, username: str, password: str, db: str, host: str, port: str, el_key: str
+    ):
         self.username = username
         self.password = password
         self.db = db
         self.host = host
         self.port = port
+        self.el_key = el_key
 
     def get_connection(self):
         conn = psycopg2.connect(
@@ -48,7 +53,7 @@ def get_audio_settings() -> AudioImporterSettings:
         os.getenv("DB_NAME"),
         os.getenv("DB_HOST"),
         os.getenv("DB_PORT"),
-        os.getenv("ELEVEN_LABS_KEY")
+        os.getenv("ELEVEN_LABS_KEY"),
     )
 
 
@@ -56,8 +61,8 @@ class AudioImporter:
     def __init__(self, settings: AudioImporterSettings):
         self.settings = settings
 
-    def tts(self, text: str) -> bytes:
-       return None 
+    def tts(self, text: str, voice_id: str) -> bytes:
+        return eleven_labs.eleven_labs_tts(text, self.settings.el_key, voice_id)
 
     def add_program(self, name: str, audio: bytes) -> int:
         return 1
@@ -67,3 +72,14 @@ class AudioImporter:
 
     def add_program_to_queue(self, id: int):
         pass
+
+        """
+if __name__ == "__main__":
+    file = "output.mp3"
+    settings = get_audio_settings()
+    f = open(f"{file}", "wb")
+    f.write(eleven_labs.eleven_labs_tts("Testing 123", settings.el_key, "21m00Tcm4TlvDq8ikWAM"))
+    f.close()
+    
+    subprocess.call(f"vlc {file}", shell=True)
+        """
