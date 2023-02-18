@@ -3,30 +3,9 @@ import os
 import eleven_labs
 import subprocess
 
-DATABASE_SQL = """
-create table program (
-  id integer primary key default nextval('next_id_seq'),
-  name text not null,
-  audio_data bytea not null
-);
-
-create table music (
-  id integer not null references(program.id) default nextval('next_id_seq'),
-  genre text not null
-);
-
-create index on music(genre);
-
-create table queue (
-  pos integer primary key default nextval('next_id_seq'),
-  program_id integer not null references(program.id)
-);
-"""
-
 PIERS_MORGAN = "3Ht7G75cBW4JaQld9TQI"
 JORDAN_PETERSON = "B4emaEpL5FcK3fc2AX1f"
-JOE_ROGAN = "VAS4XWXYTmSKls7OGoSm"
-DA_QUEEN = "iLozDr3z01WMOR7iuxha"
+DANNY = "IlLo2Vy8UKY0YQ4muyjI"
 
 
 class AudioImporterSettings:
