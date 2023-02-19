@@ -142,7 +142,7 @@ def queue_response(text: str) -> None:
     if text[0] == "?":
         createRadioShow(text[1:])
     else:
-        queue_response(text)
+        queue_response_normal(text)
 
 
 @app.route("/", methods=["GET", "POST"])
