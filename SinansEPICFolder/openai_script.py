@@ -26,7 +26,7 @@ def create_waffle(article_text, article_number):
 
 
 def get_voice() -> str:
-    VOICES = [audio.DANNY, audio.LEO]
+    VOICES = [audio.DANNY, audio.LEO, audio.SINAN]
     return VOICES[random.randint(0, len(VOICES) - 1)]
 
 
