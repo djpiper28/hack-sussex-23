@@ -12,7 +12,7 @@ audio_importer = None
 def createRadioShow(topic: str):
     global audio_importer
     print(f"Centering radio show around {topic}")
-    prompt = f"""Jordan Peterson and Piers Morgan are hosting a radio show, and they're talking about {topic}, their guest, Danny Piper who is a member of the british computing society and, many unions.
+    prompt = f"""Jordan Peterson and Piers Morgan are hosting a radio show, and they're talking about {topic}, their guest, Danny Piper who is a member of the british computing society and, Leo who is a C++ developer and avid windows user.
 
 Jordan:"""
 
@@ -107,6 +107,8 @@ def speakerToAudio(splitText: list):
             voice = audio.DANNY
         elif i[0] == "Piers":
             voice = audio.PIERS_MORGAN
+        elif i[0] == "Leo":
+            voice = audio.LEO
 
         # Add to database
         audio_importer.add_program_to_queue(

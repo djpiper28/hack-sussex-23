@@ -25,22 +25,31 @@ def create_waffle(article_text, article_number):
     return short_text
 
 
+def get_voice() -> str:
+    VOICES = [audio.DANNY, audio.LEO, audio.SINAN]
+    return VOICES[random.randint(0, len(VOICES) - 1)]
+
+
 if __name__ == "__main__":
     dotenv.load_dotenv()
 
     while 1:
-        print("Scraping")
-        article_text = scraper.BBC().get_home_articles()
-        article_number = random.randint(0, len(article_text)-1)
-        settings = audio.get_audio_settings()
-        audio_importer = audio.AudioImporter(settings)
-        audio_importer.add_program_to_queue(
-            audio_importer.add_program(
-                "Danny News",
-                audio_importer.tts(
-                    create_waffle(article_text, article_number), audio.DANNY
-                ),
-            )
-        )
+        try:
+          print("Scraping")
+          article_text = scraper.BBC().get_home_articles()
+          article_number = random.randint(0, len(article_text)-1)
+          settings = audio.get_audio_settings()
+          audio_importer = audio.AudioImporter(settings)
+          audio_importer.add_program_to_queue(
+               audio_importer.add_program(
+                 "Danny News or Leo News - WHOO KNOWS",
+                 audio_importer.tts(
+                      create_waffle(article_text, article_number), get_voice() 
+                 ),
+                )
+          )
 
-        time.sleep(60 * 10)
+          time.sleep(60 * 10)
+        except Exception as e:
+            print(e)
+            time.sleep(10)
