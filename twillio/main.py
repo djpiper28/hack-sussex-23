@@ -47,7 +47,7 @@ def createRadioShow(topic: str):
         res = openai.Completion.create(
             engine="davinci",
             prompt=out_text,
-            temperature=0.96,
+            temperature=0.94,
             max_tokens=512,
         )
 
