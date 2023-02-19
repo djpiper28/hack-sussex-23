@@ -69,9 +69,9 @@ if __name__ == "__main__":
     settings = audio.get_audio_settings()
     audio_importer = audio.AudioImporter(settings)
     for article in get_news():
-       title = "More breaking news!! " + article["title"]
-       audio_importer.add_program_to_queue(
-           audio_importer.add_program(
-               "Danny's test audio_importer", audio_importer.tts(title, audio.DANNY)
-           )
-       )
+        title = "More breaking news!! " + article["title"]
+        audio_importer.add_program_to_queue(
+            audio_importer.add_program(
+                "Danny's test audio_importer", audio_importer.tts(title, audio.DANNY)
+            )
+        )

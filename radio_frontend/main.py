@@ -44,11 +44,17 @@ def main(settings: audio.AudioSettings) -> None:
             f.close()
 
             keyboard.press(Key.media_play_pause)
+            time.sleep(0.1)
             keyboard.release(Key.media_play_pause)
             time.sleep(0.1)
-            subprocess.run(f"mpv {TMP_FILE}", shell=True, check=True)
+            subprocess.run(
+                f"ffmpeg-normalize tmp.mp3 -o out.mp3 -c:a libmp3lame && mv out.mp3 tmp.mp3 && mpv {TMP_FILE}",
+                shell=True,
+                check=True,
+            )
             time.sleep(0.1)
             keyboard.press(Key.media_play_pause)
+            time.sleep(0.1)
             keyboard.release(Key.media_play_pause)
         except:
             print("Shit is fucked")
