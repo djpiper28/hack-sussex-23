@@ -5,6 +5,8 @@ import subprocess
 import dotenv
 import time
 import traceback
+import os
+import random
 import audio_library.audio_lib as audio
 
 TMP_FILE = "tmp.mp3"
@@ -35,12 +37,35 @@ def get_next(settings: audio.AudioSettings) -> bytes:
     return ret
 
 
+SECONDS_TEXT_AD = 60 * 20
+
+
 def main(settings: audio.AudioSettings) -> None:
     scope = "user-read-playback-state,user-modify-playback-state,app-remote-control"
     sp = spotipy.Spotify(client_credentials_manager=SpotifyOAuth(scope=scope))
+    last: int = 0
 
     while True:
         try:
+            if time.time() - last >= SECONDS_TEXT_AD:
+                print("Advertising")
+                last = time.time()
+                ads = []
+                for f in os.listdir():
+                    if "call_in_" in f:
+                        ads.append(f)
+                ad = ads[random.randint(0, len(ads) - 1)]
+
+                sp.pause_playback()
+                time.sleep(0.1)
+                subprocess.run(
+                    f"mpv {ad}",
+                    shell=True,
+                    check=True,
+                )
+                time.sleep(0.1)
+                sp.start_playback()
+
             data: bytes = get_next(settings)
             if data == None:
                 time.sleep(1)
@@ -58,7 +83,6 @@ def main(settings: audio.AudioSettings) -> None:
             )
             time.sleep(0.1)
             sp.start_playback()
-
         except:
             print("Shit is fucked")
             traceback.print_exc()
