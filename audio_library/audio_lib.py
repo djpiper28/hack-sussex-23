@@ -145,7 +145,7 @@ if __name__ == "__main__":
     dotenv.load_dotenv()
     settings = get_audio_settings()
     audio = AudioImporter(settings)
-    for i in range(1100, 1200):
+    for i in range(1366, 1427):
         try:
             audio.add_program_to_queue(i)
         except:
