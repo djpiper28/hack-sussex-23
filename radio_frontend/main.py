@@ -1,7 +1,7 @@
-from pynput.keyboard import Controller, Key
+from spotipy.oauth2 import SpotifyOAuth
 
+import spotipy
 import subprocess
-import psycopg2
 import dotenv
 import time
 import traceback
@@ -36,7 +36,9 @@ def get_next(settings: audio.AudioSettings) -> bytes:
 
 
 def main(settings: audio.AudioSettings) -> None:
-    keyboard = Controller()
+    scope = "user-read-playback-state,user-modify-playback-state,app-remote-control"
+    sp = spotipy.Spotify(client_credentials_manager=SpotifyOAuth(scope=scope))
+
     while True:
         try:
             data: bytes = get_next(settings)
@@ -47,9 +49,7 @@ def main(settings: audio.AudioSettings) -> None:
             f.write(data)
             f.close()
 
-            keyboard.press(Key.media_play_pause)
-            time.sleep(0.1)
-            keyboard.release(Key.media_play_pause)
+            sp.pause_playback()
             time.sleep(0.1)
             subprocess.run(
                 f"ffmpeg-normalize tmp.mp3 -o out.mp3 -c:a libmp3lame && mv out.mp3 tmp.mp3 && mpv {TMP_FILE}",
@@ -57,9 +57,8 @@ def main(settings: audio.AudioSettings) -> None:
                 check=True,
             )
             time.sleep(0.1)
-            keyboard.press(Key.media_play_pause)
-            time.sleep(0.1)
-            keyboard.release(Key.media_play_pause)
+            sp.start_playback()
+
         except:
             print("Shit is fucked")
             traceback.print_exc()
