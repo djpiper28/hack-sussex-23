@@ -41,6 +41,7 @@ def main(settings: audio.AudioSettings) -> None:
         try:
             data: bytes = get_next(settings)
             if data == None:
+                time.sleep(1)
                 continue
             f = open(TMP_FILE, "wb")
             f.write(data)
