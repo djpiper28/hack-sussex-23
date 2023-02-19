@@ -88,7 +88,7 @@ def main(settings: audio.AudioSettings) -> None:
             print("Shit is fucked")
             traceback.print_exc()
             time.sleep(1)
-        finally:
+        if paused:
             try:
                 sp.start_playback()
             except:
