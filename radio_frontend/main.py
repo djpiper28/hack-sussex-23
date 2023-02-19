@@ -36,7 +36,7 @@ def get_next(settings: audio.AudioSettings) -> bytes:
 
 
 def main(settings: audio.AudioSettings) -> None:
-    scope = "user-read-playback-state,user-modify-playback-state"
+    scope = "user-read-playback-state,user-modify-playback-state,app-remote-control"
     sp = spotipy.Spotify(client_credentials_manager=SpotifyOAuth(scope=scope))
 
     while True:
@@ -49,7 +49,7 @@ def main(settings: audio.AudioSettings) -> None:
             f.write(data)
             f.close()
 
-            sp.volume(25)
+            sp.pause_playback()
             time.sleep(0.1)
             subprocess.run(
                 f"ffmpeg-normalize tmp.mp3 -o out.mp3 -c:a libmp3lame && mv out.mp3 tmp.mp3 && mpv {TMP_FILE}",
@@ -57,7 +57,7 @@ def main(settings: audio.AudioSettings) -> None:
                 check=True,
             )
             time.sleep(0.1)
-            sp.volume(75)
+            sp.start_playback()
 
         except:
             print("Shit is fucked")
