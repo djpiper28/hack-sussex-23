@@ -39,6 +39,8 @@ def get_next(settings: audio.AudioSettings) -> bytes:
 
 
 SECONDS_TEXT_AD = 60 * 20
+MIN_TIME = 5
+TIME_OFFSET = 100
 
 
 def main(settings: audio.AudioSettings) -> None:
@@ -46,7 +48,7 @@ def main(settings: audio.AudioSettings) -> None:
     sp = spotipy.Spotify(client_credentials_manager=SpotifyOAuth(scope=scope))
     last_ad: int = 0
     last_ol: int = 0
-    ONE_LINER_FREQUENCY = 75
+    ONE_LINER_FREQUENCY = 5
 
     while True:
         global paused
@@ -81,8 +83,10 @@ def main(settings: audio.AudioSettings) -> None:
                     max_tokens=4,
                 )
                 out_text = response.choices[0].text.strip()
-                subprocess.run(f"speak '{out_text}'", shell=True)
-                ONE_LINER_FREQUENCY = 75 + random.randint(0, 100)
+                subprocess.run(
+                    f"speak '{out_text}'", shell=True
+                )
+                ONE_LINER_FREQUENCY = MIN_TIME + random.randint(0, TIME_OFFSET)
 
             data: bytes = get_next(settings)
             if data == None:
