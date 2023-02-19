@@ -31,7 +31,7 @@ if __name__ == "__main__":
     while 1:
         print("Scraping")
         article_text = scraper.BBC().get_home_articles()
-        article_number = random.randint(0, len(article_text))
+        article_number = random.randint(0, len(article_text)-1)
         settings = audio.get_audio_settings()
         audio_importer = audio.AudioImporter(settings)
         audio_importer.add_program_to_queue(
