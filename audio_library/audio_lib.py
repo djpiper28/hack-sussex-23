@@ -38,11 +38,11 @@ def eleven_labs_tts(text: str, api_key: str, voice_id: str) -> bytes:
     return r.content
 
 
-PIERS_MORGAN = "ghs8Pp3EHJvOdXnIE00e"
-JORDAN_PETERSON = "CVyI62Pgl2ns5yHkp9Th"
-DANNY = "Qm8ECFgftVCqQGCGNfOO"
-LEO = "gaq1ichFbfkQpeOEoQIE"
-SINAN = "myCqH5RBENXISuh1jhFL"
+PIERS_MORGAN = "Up4lOKslI9Vs1d1qEsR9"
+JORDAN_PETERSON = "SJpKNjuqrXSCa67podO4"
+DANNY = "sSbkueRYFAOLAVKNaHwH"
+LEO = "mZpwX7gVtFAuMYQpMeRt"
+SINAN = "zLcHYUSF93Qyhzx6hpYW"
 
 
 class AudioSettings:
