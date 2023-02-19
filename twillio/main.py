@@ -3,6 +3,7 @@ import audio_library.audio_lib as audio
 import requests
 import openai
 from flask import Flask, request
+from threading import Thread
 
 app = Flask(__name__)
 audio_importer = None
@@ -14,11 +15,12 @@ def queue_response(text: str) -> None:
     print(f"Responding to {text}")
     response = openai.Completion.create(
         engine="davinci",
-        prompt='Respond to the following text message to Crackle FM, being aggresive to the sender and, defending our music choices "{text}"',
-        temperature=0.9,
-        max_tokens=256,
+        prompt=f'Respond to the following text message, being aggresive to the sender and, defending our music choices "{text}"',
+        temperature=0.7,
+        max_tokens=50,
     )
     out_text = response.choices[0].text.strip()
+    print(f"Chatting the following arse{out_text}")
 
     # Add to database
     audio_importer.add_program_to_queue(
@@ -31,7 +33,8 @@ def queue_response(text: str) -> None:
 
 @app.route("/", methods=["GET", "POST"])
 def func() -> str:
-    queue_response(request.get_data().decode("UTF-8"))
+    t = Thread(target = queue_response, args=(request.get_data().decode("UTF-8"),))
+    t.start()
     return "it's someone else's problem now"
 
 

