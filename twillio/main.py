@@ -11,12 +11,12 @@ audio_importer = None
 # The topic should be a string that is the topic of the radio show
 def createRadioShow(topic: str):
     global audio_importer
+    print(f"Centering radio show around {topic}")
     prompt = f"""Jordan Peterson and Piers Morgan are hosting a radio show, and they're talking about {topic}, their guest, Danny Piper who is a member of the british computing society and, many unions.
 
 Jordan:"""
 
     # Send to gpt 3
-    print(f"Centering radio show around {topic}")
     response = openai.Completion.create(
         engine="davinci",
         prompt=prompt,
