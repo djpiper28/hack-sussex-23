@@ -46,6 +46,7 @@ def main(settings: audio.AudioSettings) -> None:
     last: int = 0
 
     while True:
+        paused = False
         try:
             if time.time() - last >= SECONDS_TEXT_AD:
                 print("Advertising")
@@ -57,6 +58,7 @@ def main(settings: audio.AudioSettings) -> None:
                 ad = ads[random.randint(0, len(ads) - 1)]
 
                 sp.pause_playback()
+                paused = True
                 time.sleep(0.1)
                 subprocess.run(
                     f"mpv {ad}",
@@ -64,17 +66,17 @@ def main(settings: audio.AudioSettings) -> None:
                     check=True,
                 )
                 time.sleep(0.1)
-                sp.start_playback()
 
             data: bytes = get_next(settings)
             if data == None:
                 time.sleep(1)
                 continue
+            sp.pause_playback()
+            paused = True
             f = open(TMP_FILE, "wb")
             f.write(data)
             f.close()
 
-            sp.pause_playback()
             time.sleep(0.1)
             subprocess.run(
                 f"ffmpeg-normalize tmp.mp3 -o out.mp3 -c:a libmp3lame && mv out.mp3 tmp.mp3 && mpv {TMP_FILE}",
@@ -82,11 +84,15 @@ def main(settings: audio.AudioSettings) -> None:
                 check=True,
             )
             time.sleep(0.1)
-            sp.start_playback()
         except:
             print("Shit is fucked")
             traceback.print_exc()
             time.sleep(1)
+        finally:
+            try:
+                sp.start_playback()
+            except:
+                traceback.print_exc()
 
 
 if __name__ == "__main__":
