@@ -4,6 +4,7 @@ import subprocess
 import dotenv
 import requests
 import subprocess
+import openai
 
 TMP_FILE = f"tmp-{os.getpid()}.mp3"
 
@@ -44,7 +45,14 @@ DANNY = "IlLo2Vy8UKY0YQ4muyjI"
 
 class AudioSettings:
     def __init__(
-        self, username: str, password: str, db: str, host: str, port: str, el_key: str
+        self,
+        username: str,
+        password: str,
+        db: str,
+        host: str,
+        port: str,
+        el_key: str,
+        gpt_key: str,
     ):
         self.username = username
         self.password = password
@@ -52,6 +60,8 @@ class AudioSettings:
         self.host = host
         self.port = port
         self.el_key = el_key
+        self.gpt_key = gpt_key
+        openai.api_key = self.gpt_key
 
     def get_connection(self):
         conn = psycopg2.connect(
@@ -73,6 +83,7 @@ def get_audio_settings() -> AudioSettings:
         os.getenv("DB_HOST"),
         os.getenv("DB_PORT"),
         os.getenv("EL_API"),
+        os.getenv("GPT_KEY"),
     )
 
 
