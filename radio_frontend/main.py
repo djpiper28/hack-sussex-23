@@ -46,6 +46,7 @@ def main(settings: audio.AudioSettings) -> None:
     last: int = 0
 
     while True:
+        global paused
         paused = False
         try:
             if time.time() - last >= SECONDS_TEXT_AD:
