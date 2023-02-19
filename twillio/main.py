@@ -8,6 +8,14 @@ from threading import Thread
 app = Flask(__name__)
 audio_importer = None
 
+
+def replace_naughty_words(text: str) -> str:
+    with open("/home/danny/naughty_words.txt") as f:
+        for line in f:
+            text = text.replace(line, "-")
+    return text
+
+
 # The topic should be a string that is the topic of the radio show
 def createRadioShow(topic: str):
     global audio_importer
@@ -23,7 +31,7 @@ def createRadioShow(topic: str):
         temperature=0.96,
         max_tokens=512,
     )
-    out_text = response.choices[0].text.strip()
+    out_text = replace_naughty_words(response.choices[0].text.strip())
     print(f"Chatting the following arse: \n\n{out_text}")
     out_text = prompt + out_text
     # split the text by new lines and get whoever is speaking
@@ -125,11 +133,11 @@ def queue_response_normal(text: str) -> None:
     print(f"Responding to {text}")
     response = openai.Completion.create(
         engine="davinci",
-        prompt=f'Respond to the following text message, being aggresive to the sender and, defending our music choices: {text}',
+        prompt=f"Respond to the following text message, being aggresive to the sender and, defending our music choices: {text}",
         temperature=0.7,
         max_tokens=70,
     )
-    out_text = response.choices[0].text.strip()
+    out_text = replace_naughty_words(response.choices[0].text.strip())
     print(f"Chatting the following arse{out_text}")
 
     # Add to database
@@ -140,6 +148,7 @@ def queue_response_normal(text: str) -> None:
         )
     )
 
+
 def queue_response(text: str) -> None:
     if text[0] == "?":
         createRadioShow(text[1:])
@@ -149,7 +158,7 @@ def queue_response(text: str) -> None:
 
 @app.route("/", methods=["GET", "POST"])
 def func() -> str:
-    t = Thread(target = queue_response, args=(request.get_data().decode("UTF-8"),))
+    t = Thread(target=queue_response, args=(request.get_data().decode("UTF-8"),))
     t.start()
     return "it's someone else's problem now"
 

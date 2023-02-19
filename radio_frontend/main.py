@@ -7,6 +7,7 @@ import time
 import traceback
 import os
 import random
+import openai
 import audio_library.audio_lib as audio
 
 TMP_FILE = "tmp.mp3"
@@ -43,15 +44,17 @@ SECONDS_TEXT_AD = 60 * 20
 def main(settings: audio.AudioSettings) -> None:
     scope = "user-read-playback-state,user-modify-playback-state,app-remote-control"
     sp = spotipy.Spotify(client_credentials_manager=SpotifyOAuth(scope=scope))
-    last: int = 0
+    last_ad: int = 0
+    last_ol: int = 0
+    ONE_LINER_FREQUENCY = 75
 
     while True:
         global paused
         paused = False
         try:
-            if time.time() - last >= SECONDS_TEXT_AD:
+            if time.time() - last_ad >= SECONDS_TEXT_AD:
                 print("Advertising")
-                last = time.time()
+                last_ad = time.time()
                 ads = []
                 for f in os.listdir():
                     if "call_in_" in f:
@@ -67,6 +70,19 @@ def main(settings: audio.AudioSettings) -> None:
                     check=True,
                 )
                 time.sleep(0.1)
+
+            if time.time() - last_ol >= ONE_LINER_FREQUENCY:
+                print("Saying random stuff")
+                last_ol = time.time()
+                response = openai.Completion.create(
+                    engine="davinci",
+                    prompt="say a random things about music",
+                    temperature=0.9,
+                    max_tokens=4,
+                )
+                out_text = response.choices[0].text.strip()
+                subprocess.run(f"speak '{out_text}'", shell=True)
+                ONE_LINER_FREQUENCY = 75 + random.randint(0, 100)
 
             data: bytes = get_next(settings)
             if data == None:
