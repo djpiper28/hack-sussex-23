@@ -41,6 +41,7 @@ def eleven_labs_tts(text: str, api_key: str, voice_id: str) -> bytes:
 PIERS_MORGAN = "PASbzlxUkUtlVnoBklHD"
 JORDAN_PETERSON = "RzitGLVOpJR2iB2vFiqH"
 DANNY = "dEBn1IfgUgniBBtzT8Fx"
+LEO = "ZpFpvCxpQTM5oAulRRxs"
 
 
 class AudioSettings:
@@ -143,6 +144,8 @@ if __name__ == "__main__":
     dotenv.load_dotenv()
     settings = get_audio_settings()
     audio = AudioImporter(settings)
-    f = open("/home/danny/Downloads/Ram Ranch.wav", "rb")
-    audio.add_program_to_queue(audio.add_program("Danny's test audio", f.read()))
-    f.close()
+    for i in range(1100, 1200):
+        try:
+            audio.add_program_to_queue(i)
+        except:
+            pass

@@ -25,6 +25,11 @@ def create_waffle(article_text, article_number):
     return short_text
 
 
+def get_voice() -> str:
+    VOICES = [audio.DANNY, audio.LEO]
+    return VOICES[random.randint(0, len(VOICES) - 1)]
+
+
 if __name__ == "__main__":
     dotenv.load_dotenv()
 
@@ -37,9 +42,9 @@ if __name__ == "__main__":
           audio_importer = audio.AudioImporter(settings)
           audio_importer.add_program_to_queue(
                audio_importer.add_program(
-                 "Danny News",
+                 "Danny News or Leo News - WHOO KNOWS",
                  audio_importer.tts(
-                      create_waffle(article_text, article_number), audio.DANNY
+                      create_waffle(article_text, article_number), get_voice() 
                  ),
                 )
           )
