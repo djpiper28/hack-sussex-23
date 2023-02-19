@@ -15,7 +15,7 @@ def create_waffle(article_text, article_number):
     )
     response = openai.Completion.create(
         engine="text-davinci-003",
-        prompt="Rewrite this in the form of an aggressive radio show hosted by Piers Morgan:\n\n"
+        prompt="Rewrite this in the form of an aggressive radio show:\n\n"
         + combined_text,
         temperature=0.7,
         max_tokens=256,
