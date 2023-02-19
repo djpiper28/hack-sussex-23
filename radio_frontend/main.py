@@ -21,7 +21,8 @@ def get_next(settings: audio.AudioSettings) -> bytes:
         limit 1;"""
     )
     tmp = cur.fetchone()
-    print(len(tmp))
+    if tmp is None:
+        return None
     pos = tmp[0]
     name = tmp[1]
     ret = tmp[2]
@@ -39,6 +40,8 @@ def main(settings: audio.AudioSettings) -> None:
     while True:
         try:
             data: bytes = get_next(settings)
+            if data == None:
+                continue
             f = open(TMP_FILE, "wb")
             f.write(data)
             f.close()
