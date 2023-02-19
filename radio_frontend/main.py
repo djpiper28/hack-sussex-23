@@ -1,3 +1,5 @@
+from pynput.keyboard import Controller, Key
+
 import subprocess
 import psycopg2
 import dotenv
@@ -33,6 +35,7 @@ def get_next(settings: audio.AudioSettings) -> bytes:
 
 
 def main(settings: audio.AudioSettings) -> None:
+    keyboard = Controller()
     while True:
         try:
             data: bytes = get_next(settings)
@@ -40,7 +43,13 @@ def main(settings: audio.AudioSettings) -> None:
             f.write(data)
             f.close()
 
+            keyboard.press(Key.media_play_pause)
+            keyboard.release(Key.media_play_pause)
+            time.sleep(0.1)
             subprocess.run(f"mpv {TMP_FILE}", shell=True, check=True)
+            time.sleep(0.1)
+            keyboard.press(Key.media_play_pause)
+            keyboard.release(Key.media_play_pause)
         except:
             print("Shit is fucked")
             traceback.print_exc()
