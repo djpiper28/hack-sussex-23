@@ -15,9 +15,9 @@ def queue_response(text: str) -> None:
     print(f"Responding to {text}")
     response = openai.Completion.create(
         engine="davinci",
-        prompt=f'Respond to the following text message, being aggresive to the sender and, defending our music choices "{text}"',
+        prompt=f'Respond to the following text message, being aggresive to the sender and, defending our music choices: {text}',
         temperature=0.7,
-        max_tokens=50,
+        max_tokens=70,
     )
     out_text = response.choices[0].text.strip()
     print(f"Chatting the following arse{out_text}")
